@@ -1,6 +1,7 @@
 import class Foundation.JSONEncoder
 import class Foundation.JSONDecoder
 import struct Foundation.Data
+import LoggerAPI
 
 /// A collection of signers labeled by `kid`.
 public final class JWTSigners {
@@ -66,12 +67,16 @@ public final class JWTSigners {
     public func get(kid: JWKIdentifier? = nil, alg: String? = nil) -> JWTSigner? {
         let signer: Signer
         if let kid = kid, let stored = self.storage[kid] {
+            Log.debug("stored signer!")
             signer = stored
         } else if let d = self.default {
+            Log.debug("default signer!")
             signer = d
         } else {
+            Log.debug("return nill!")
             return nil
         }
+        
         switch signer {
         case .jwt(let jwt):
             return jwt
@@ -83,8 +88,10 @@ public final class JWTSigners {
     public func require(kid: JWKIdentifier? = nil, alg: String? = nil) throws -> JWTSigner {
         guard let signer = self.get(kid: kid, alg: alg) else {
             if let kid = kid {
+                Log.debug("unknown KID!")
                 throw JWTError.unknownKID(kid)
             } else {
+                Log.debug("unknown KIDHeader!")
                 throw JWTError.missingKIDHeader
             }
         }

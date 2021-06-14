@@ -1,4 +1,5 @@
 import class Foundation.JSONDecoder
+import LoggerAPI
 
 struct JWTParser {
     let encodedHeader: ArraySlice<UInt8>
@@ -10,6 +11,7 @@ struct JWTParser {
     {
         let tokenParts = token.copyBytes().split(separator: .period)
         guard tokenParts.count == 3 else {
+            Log.error("malformed token!")
             throw JWTError.malformedToken
         }
         self.encodedHeader = tokenParts[0]
@@ -31,6 +33,7 @@ struct JWTParser {
 
     func verify(using signer: JWTSigner) throws {
         guard try signer.algorithm.verify(self.signature, signs: self.message) else {
+            Log.error("signatureVerifictionFailed!")
             throw JWTError.signatureVerifictionFailed
         }
     }
