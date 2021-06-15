@@ -29,28 +29,30 @@ public struct ExpirationClaim: JWTUnixEpochClaim, Equatable {
 
     /// See `JWTClaim`.
     public init(value: Date) {
-        let addedTime = value.addingTimeInterval(self.addHours)
-        self.value = addedTime
+        self.value = value
 
+        let addedTime = value.addingTimeInterval(self.addHours)
         let initDateString = ISO8601DateFormatter.string(from: value)
-        let selfDateString = ISO8601DateFormatter.string(from: self.value)
         let addedDateString = ISO8601DateFormatter.string(from: addedTime)
 
-        Log.debug("Init Date: \(initDateString)")
         Log.debug("Self date: \(selfDateString))")
         Log.debug("Date + 2H: \(addedDateString)")
     }
 
     /// Throws an error if the claim's date is later than current date.
     public func verifyNotExpired(currentDate: Date = .init()) throws {
-        
-        let updatedCurrentDate = currentDate.addingTimeInterval(-addHours)
-        
+        let initDateString = ISO8601DateFormatter.string(from: value)
         let currentDateString = ISO8601DateFormatter.string(from: currentDate)
-        let updatedDateString = ISO8601DateFormatter.string(from: updatedCurrentDate)
 
-        Log.debug("Current date: \(currentDateString)")
-        Log.debug("Updated date (-2H): \(updatedDateString)")
+        Log.debug("Self date: \(initDateString))")
+        Log.debug("Current Date: \(currentDateString)")
+//        let updatedCurrentDate = currentDate.addingTimeInterval(-addHours)
+//
+//        let currentDateString = ISO8601DateFormatter.string(from: currentDate)
+//        let updatedDateString = ISO8601DateFormatter.string(from: updatedCurrentDate)
+//
+//        Log.debug("Current date: \(currentDateString)")
+//        Log.debug("Updated date (-2H): \(updatedDateString)")
 
         switch self.value.compare(updatedCurrentDate) {
         case .orderedAscending, .orderedSame:
