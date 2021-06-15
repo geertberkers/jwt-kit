@@ -54,7 +54,7 @@ public struct ExpirationClaim: JWTUnixEpochClaim, Equatable {
 //        Log.debug("Current date: \(currentDateString)")
 //        Log.debug("Updated date (-2H): \(updatedDateString)")
 
-        switch self.value.compare(updatedCurrentDate) {
+        switch self.value.compare(currentDate) {
         case .orderedAscending, .orderedSame:
             throw JWTError.claimVerificationFailure(name: "exp", reason: "expired")
         case .orderedDescending:
