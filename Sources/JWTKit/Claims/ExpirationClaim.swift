@@ -35,7 +35,7 @@ public struct ExpirationClaim: JWTUnixEpochClaim, Equatable {
         let initDateString = ISO8601DateFormatter.string(from: value)
         let addedDateString = ISO8601DateFormatter.string(from: addedTime)
 
-        Log.debug("Self date: \(selfDateString))")
+        Log.debug("Self date: \(initDateString))")
         Log.debug("Date + 2H: \(addedDateString)")
     }
 
